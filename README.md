@@ -5,7 +5,7 @@
 
 With a palette of soft browns, muted greens, and warm yellows, Shirewear provides a comforting reading experience, just before the second breakfast.
 
-![screenshot](images/shirewear_palette.png)
+![screenshot](images/shirewear_palette2.png)
 
 ## Screenshots
 
