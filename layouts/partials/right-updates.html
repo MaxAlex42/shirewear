@@ -1,0 +1,45 @@
+{{/* Right sidebar "updates" widget matching existing style */}}
+<aside class="sidebar-right">
+  <h3 class="sidebar-title">Updates</h3>
+
+  {{ if .IsHome }}
+    {{/* HOME: show site updates (data/updates.*) */}}
+    {{ $updates := site.Data.updates }}
+    {{ if $updates }}
+      <div class="widget-list">
+        {{ range first 6 $updates }}
+          <div class="widget-item">
+            <div class="widget-title">{{ .title }}</div>
+            <div class="widget-date">{{ .date }}</div>
+            {{ with .details }}<div class="widget-details">{{ . }}</div>{{ end }}
+          </div>
+        {{ end }}
+      </div>
+    {{ else }}
+      <div class="placeholder">
+        <p>No updates yet. Add them in <code>data/updates.yaml</code>.</p>
+      </div>
+    {{ end }}
+  {{ else if .IsPage }}
+    {{/* SINGLE POST: show last edit */}}
+    <div class="widget-item">
+      <div class="widget-title">Last edited</div>
+      <div class="widget-date">
+        {{ with .Lastmod }}{{ .Format "Jan 2, 2006 15:04" }}{{ else }}Unknown{{ end }}
+      </div>
+      {{ with .GitInfo }}
+        <div class="widget-details">
+          Commit: <code>{{ .AbbreviatedHash }}</code>{{ with .AuthorDate }} ({{ .Format "Jan 2, 2006" }}){{ end }}
+        </div>
+      {{ end }}
+      {{/* Fallback: if no GitInfo and no Lastmod, suggest adding lastmod */}}
+      {{ if and (not .GitInfo) (not .Params.lastmod) }}
+        <div class="muted" style="margin-top:.25rem;">Tip: set <code>lastmod</code> in front matter or enable <code>enableGitInfo</code>.</div>
+      {{ end }}
+    </div>
+  {{ else }}
+    <div class="placeholder">
+      <p>Browse posts to see last edits here.</p>
+    </div>
+  {{ end }}
+</aside>

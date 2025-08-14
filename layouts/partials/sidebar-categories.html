@@ -1,0 +1,54 @@
+{{/*
+  Args:
+    - ctx  : current context (.)
+    - mode : "all" (list all categories as filters) or "entry" (only this post's categories)
+*/}}
+{{ $ctx := .ctx }}
+{{ $mode := .mode | default "all" }}
+
+<aside class="sidebar-left">
+  <h3 class="sidebar-title">Categories</h3>
+
+  <ul class="category-list">
+    {{ if eq $mode "entry" }}
+      {{ with $ctx.Params.categories }}
+        {{ range . }}
+          <li>
+            <a href="{{ "/categories/" | relURL }}{{ . | urlize }}/">{{ . }}</a>
+          </li>
+        {{ end }}
+      {{ else }}
+        <li class="muted">This post has no categories.</li>
+      {{ end }}
+
+    {{ else }}
+      {{/* mode = "all": show all categories (no counts), preserve casing via term page title if present */}}
+      {{ $isTax := eq $ctx.Kind "taxonomy" }}
+      {{ $current := $ctx.Title }}
+      {{ $cats := $ctx.Site.Taxonomies.categories }}
+
+      {{ if $cats }}
+        {{ range $name, $taxonomy := $cats }}
+          {{/* Prefer the term page Title for display to preserve capitalization */}}
+          {{ $term := site.GetPage (printf "/categories/%s" (urlize $name)) }}
+          {{ $label := cond $term $term.Title $name }}
+
+          {{/* Active state when currently viewing that category */}}
+          {{ $active := and $isTax (eq (lower $name) (lower $current)) }}
+
+          <li>
+            <a href="{{ "/categories/" | relURL }}{{ $name | urlize }}/" class="{{ if $active }}active{{ end }}">
+              {{ $label }}
+            </a>
+          </li>
+        {{ end }}
+
+        {{ if $isTax }}
+          <li><a href="{{ $ctx.Site.Home.RelPermalink }}" class="all-link">All posts</a></li>
+        {{ end }}
+      {{ else }}
+        <li class="muted">No categories yet.</li>
+      {{ end }}
+    {{ end }}
+  </ul>
+</aside>

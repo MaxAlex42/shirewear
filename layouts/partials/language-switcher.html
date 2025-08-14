@@ -1,0 +1,16 @@
+<li class="lang-dropdown">
+  <a href="#" class="lang-btn">{{ .Site.Language.LanguageName }}</a>
+  <ul class="lang-menu">
+    {{ range site.Sites }}
+      {{ $lang := .Language.Lang }}
+      {{ if ne $lang $.Site.Language.Lang }}
+        {{ $label := .Language.LanguageName }}
+        {{ $alts := where $.AllTranslations "Lang" $lang }}
+        {{ $href := cond (gt (len $alts) 0) ((index $alts 0).RelPermalink) .Home.RelPermalink }}
+        <li>
+          <a href="{{ $href }}">{{ $label }}</a>
+        </li>
+      {{ end }}
+    {{ end }}
+  </ul>
+</li>

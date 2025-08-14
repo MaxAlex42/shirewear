@@ -1,0 +1,26 @@
+{{ define "main" }}
+<div class="layout-3col">
+
+  {{ partial "sidebar-categories.html" (dict "ctx" . "mode" "entry") }}
+
+  <article class="post-content">
+    <div class="post-titlebar">
+      <h1 class="post-title">{{ .Title }}</h1>
+      <small class="post-date">{{ .Date.Format "Jan 2, 2006" }}</small>
+    </div>
+
+    {{ with .Params.abstract }}
+      <div class="post-abstract post-abstract--single">
+        <p>{{ . }}</p>
+      </div>
+    {{ end }}
+
+    <div class="post-body">
+      {{ .Content }}
+    </div>
+  </article>
+
+  {{ partial "right-updates.html" . }}
+
+</div>
+{{ end }}
