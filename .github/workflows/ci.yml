@@ -2,8 +2,8 @@ name: Build demo & release theme
 
 on:
   push:
-    branches: [ "main" ]
-    tags: [ "v*" ]
+    branches: [ "main" ]   # Deploy Pages from main
+    tags: [ "v*" ]         # Create release packages on tags
   workflow_dispatch:
 
 permissions:
@@ -22,6 +22,7 @@ jobs:
   build-pages:
     name: Build & upload Pages artifact
     runs-on: ubuntu-latest
+    if: ${{ github.ref_type == 'branch' && github.ref_name == 'main' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,9 +33,18 @@ jobs:
           hugo-version: ${{ env.HUGO_VERSION }}
           extended: true
 
+      - name: Derive baseURL for GitHub Pages
+        id: vars
+        shell: bash
+        run: |
+          OWNER="${GITHUB_REPOSITORY_OWNER}"
+          REPO="${GITHUB_REPOSITORY#${OWNER}/}"
+          echo "baseurl=https://${OWNER}.github.io/${REPO}/" >> "$GITHUB_OUTPUT"
+
       - name: Build exampleSite
         run: |
-          hugo --minify -s exampleSite --themesDir ../..
+          hugo --minify -s exampleSite --themesDir ../.. \
+               -b "${{ steps.vars.outputs.baseurl }}"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -44,6 +54,7 @@ jobs:
   deploy-pages:
     needs: build-pages
     runs-on: ubuntu-latest
+    if: ${{ github.ref_type == 'branch' && github.ref_name == 'main' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -61,8 +72,8 @@ jobs:
 
       - name: Compute version
         id: ver
+        shell: bash
         run: |
-          # Use tag like v0.1.0 when present, else short SHA
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             echo "TAG=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
             echo "NAME=shirewear-${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
@@ -73,7 +84,7 @@ jobs:
 
       - name: Create clean package directory
         run: |
-          mkdir pkg
+          mkdir -p pkg
           rsync -a . pkg/shirewear \
             --exclude '.git' \
             --exclude '.github' \
