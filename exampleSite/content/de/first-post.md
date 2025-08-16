@@ -1,5 +1,6 @@
 ---
 title: "Erster Beitrag"
+type: "posts"
 date: 2025-08-16
 draft: false
 ---

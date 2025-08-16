@@ -10,7 +10,8 @@
   {{ partial "sidebar-categories.html" (dict "ctx" . "mode" "all") }}
 
   <div>
-    {{ $pages := cond .IsHome .Site.RegularPages .RegularPages }}
+    {{ $sections := .Site.Params.mainSections | default (slice "posts") }}
+    {{ $pages := cond .IsHome (where .Site.RegularPages "Type" "in" $sections) (where .RegularPages "Type" "in" $sections) }}
     {{ $paginator := .Paginate ($pages.ByDate.Reverse) }}
     <section class="blog-list compact">
       {{ range $paginator.Pages }}
