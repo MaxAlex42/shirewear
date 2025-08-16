@@ -1,0 +1,32 @@
+# Hugo build output
+/public/
+/resources/_gen/
+/hugo_stats.json
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor folders
+.vscode/
+.idea/
+*.swp
+*~
+
+# Node dependencies
+node_modules/
+
+# Go dependencies
+vendor/
+
+# Temporary files
+*.tmp
+*.bak
+
+# ExampleSite output
+exampleSite/public/
+exampleSite/resources/_gen/
+exampleSite/hugo_stats.json

@@ -1,0 +1,46 @@
+baseURL = "https://example.org/"
+title = "Shirewear Theme Example"
+theme = "shirewear"
+
+# Put the default language under /en/ instead of root paths
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = true
+
+preserveTaxonomyNames = true
+
+[params]
+  author = "MaxAlex42"
+  description = "Demo of my Hugo theme"
+  # If your list templates use mainSections, make sure it matches your section name:
+  # mainSections = ["posts"]
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    weight = 1
+    languageCode = "en-us"
+    contentDir = "content/en"
+
+  [languages.de]
+    languageName = "Deutsch"
+    weight = 2
+    languageCode = "de-de"
+    contentDir = "content/de"
+
+[pagination]
+  pagerSize = 5
+
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 2
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+

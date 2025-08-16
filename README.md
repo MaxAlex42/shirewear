@@ -5,11 +5,21 @@
 
 With a palette of soft browns, muted greens, and warm yellows, Shirewear provides a comforting reading experience, just before the second breakfast.
 
-![screenshot](images/shirewear_palette2.png)
+<p align="center">
+  <img src="images/shirewear_palette.png" alt="screenshot" width="200">
+</p>
 
 ## Screenshots
 
 [coming soon]
+
+## Running the example page
+
+```bash
+git clone https://github.com/yourname/my-hugo-theme.git
+cd my-hugo-theme/exampleSite
+hugo server --themesDir ../..
+```
 
 ## Installation
 
