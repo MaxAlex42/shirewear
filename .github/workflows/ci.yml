@@ -1,0 +1,111 @@
+name: Build demo & release theme
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "v*" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+env:
+  HUGO_VERSION: "0.148.2"
+
+jobs:
+  build-pages:
+    name: Build & upload Pages artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: ${{ env.HUGO_VERSION }}
+          extended: true
+
+      - name: Build exampleSite
+        run: |
+          hugo --minify -s exampleSite --themesDir ../..
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: exampleSite/public
+
+  deploy-pages:
+    needs: build-pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+
+  package:
+    name: Package theme (zip & tar.gz)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute version
+        id: ver
+        run: |
+          # Use tag like v0.1.0 when present, else short SHA
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            echo "TAG=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+            echo "NAME=shirewear-${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+          else
+            echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+            echo "NAME=shirewear-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create clean package directory
+        run: |
+          mkdir pkg
+          rsync -a . pkg/shirewear \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'exampleSite/public' \
+            --exclude 'exampleSite/resources' \
+            --exclude 'node_modules' \
+            --exclude '.DS_Store' \
+            --exclude 'Thumbs.db'
+
+      - name: Make archives
+        working-directory: pkg
+        run: |
+          mv shirewear "${{ steps.ver.outputs.NAME }}"
+          tar -czf "${{ steps.ver.outputs.NAME }}.tar.gz" "${{ steps.ver.outputs.NAME }}"
+          zip -r  "${{ steps.ver.outputs.NAME }}.zip"     "${{ steps.ver.outputs.NAME }}"
+
+      - name: Upload CI artifacts (pushes to main)
+        if: ${{ github.ref_type == 'branch' && github.ref_name == 'main' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.ver.outputs.NAME }}
+          path: |
+            pkg/${{ steps.ver.outputs.NAME }}.tar.gz
+            pkg/${{ steps.ver.outputs.NAME }}.zip
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Attach to GitHub Release (tags)
+        if: ${{ github.ref_type == 'tag' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            pkg/${{ steps.ver.outputs.NAME }}.tar.gz
+            pkg/${{ steps.ver.outputs.NAME }}.zip
+          generate_release_notes: true
