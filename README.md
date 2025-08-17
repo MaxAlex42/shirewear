@@ -47,12 +47,6 @@ or
 content/de/about/about.md
 ```
 
-or under 
-```bash
-content/about/about.md
-```
-if a single about page is enough.
-
 About pages need to have the "about" type in their preamble:
 ```yaml
 ---
