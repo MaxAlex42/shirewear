@@ -1,4 +1,4 @@
-baseURL = "/"
+baseURL = "https://maxalex42.github.io/shirewear/"
 title = "Shirewear Theme Example"
 theme = "shirewear"
 defaultContentLanguage = "en"
