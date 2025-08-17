@@ -1,18 +1,14 @@
 baseURL = "/"
 title = "Shirewear Theme Example"
 theme = "shirewear"
-
-# Put the default language under /en/ instead of root paths
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = true
-
 preserveTaxonomyNames = true
 
 [params]
   author = "MaxAlex42"
   description = "Demo of my Hugo theme"
-  # If your list templates use mainSections, make sure it matches your section name:
-  # mainSections = ["posts"]
+  mainSections = ["posts"]
 
 [languages]
   [languages.en]
@@ -43,4 +39,3 @@ preserveTaxonomyNames = true
 [taxonomies]
   category = "categories"
   tag = "tags"
-

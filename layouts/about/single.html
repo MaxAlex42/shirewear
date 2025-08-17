@@ -1,0 +1,28 @@
+{{ define "main" }}
+<div class="about-wrap" style="max-width:1200px;margin:1rem auto 2rem;padding:0 1rem;">
+  <article class="post-content">
+    <div class="post-titlebar">
+      <h1 class="post-title">{{ .Title }}</h1>
+      {{ with .Params.subtitle }}
+        <small class="post-date">{{ . }}</small>
+      {{ end }}
+    </div>
+
+    {{ with .Params.abstract }}
+      <div class="post-abstract post-abstract--single">
+        <p>{{ . }}</p>
+      </div>
+    {{ end }}
+
+    {{ with .Params.hero }}
+      <figure style="margin:0;">
+        <img src="{{ . | relURL }}" alt="" style="display:block;width:100%;height:auto;">
+      </figure>
+    {{ end }}
+
+    <div class="post-body">
+      {{ .Content }}
+    </div>
+  </article>
+</div>
+{{ end }}

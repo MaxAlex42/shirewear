@@ -4,7 +4,7 @@
     <ul>
       {{ $menu := .Site.Menus.main }}
       {{ range $i, $item := $menu }}
-        <li><a href="{{ $item.URL }}">{{ $item.Name }}</a></li>
+        <li><a href="{{ $item.URL | relLangURL }}">{{ $item.Name }}</a></li>
         {{ if eq $item.Name "Home" }}
           {{ partial "language-switcher.html" $ }}
         {{ end }}

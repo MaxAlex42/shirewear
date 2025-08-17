@@ -17,8 +17,8 @@ With a palette of soft browns, muted greens, and warm yellows, Shirewear provide
 
 ```bash
 git clone https://github.com/yourname/my-hugo-theme.git
-cd my-hugo-theme/exampleSite
-hugo server --themesDir ../..
+cd my-hugo-theme
+hugo server -s exampleSite/ -t ../..
 ```
 
 ## Installation
@@ -37,6 +37,36 @@ git clone https://github.com/MaxAlex42/shirewear themes/shirewear
 2. **Enable the theme in the config.toml**
 ```toml
 theme = "shirewear"
+```
+## Changing the About page
+
+The about pages live under the localized content folders, if one wants multlingual options:
+```bash
+content/en/about/about.md
+or
+content/de/about/about.md
+```
+
+or under 
+```bash
+content/about/about.md
+```
+if a single about page is enough.
+
+About pages need to have the "about" type in their preamble:
+```yaml
+---
+title: "About"
+type: "about" # <- this is the important flag that is mandatory for it to be correctly recognised
+draft: false
+---
+```
+
+### About page layout customization
+
+The layout for the About page lives under:
+```bash
+layouts/about/single.html
 ```
 
 ## License
