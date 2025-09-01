@@ -29,7 +29,7 @@ preserveTaxonomyNames = true
 [menu]
   [[menu.main]]
     name = "Home"
-    url = "/"
+    url = ""
     weight = 1
   [[menu.main]]
     name = "About"
