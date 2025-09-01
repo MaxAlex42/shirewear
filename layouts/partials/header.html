@@ -1,5 +1,7 @@
 <div class="nav-bar">
-  <h1 class="site-title"><a href="{{ "/" | relURL }}">{{ .Site.Title }}</a></h1>
+  <h1 class="site-title">
+    <a href="{{ .Site.Home.RelPermalink }}">{{ .Site.Title }}</a>
+  </h1>
   <nav>
     <ul>
       {{ $menu := .Site.Menus.main }}
